@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: exchange
+  labels:
+    app: exchange
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: exchange
