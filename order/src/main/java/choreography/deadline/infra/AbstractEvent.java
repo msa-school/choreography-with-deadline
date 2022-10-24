@@ -49,14 +49,15 @@ public class AbstractEvent {
     }
 
     public void publishAfterCommit() {
-        TransactionSynchronizationManager.registerSynchronization(
-            new TransactionSynchronizationAdapter() {
-                @Override
-                public void afterCompletion(int status) {
-                    AbstractEvent.this.publish();
-                }
-            }
-        );
+        AbstractEvent.this.publish();
+        // TransactionSynchronizationManager.registerSynchronization(
+        //     new TransactionSynchronizationAdapter() {
+        //         @Override
+        //         public void beforeCommit(boolean readonly) {
+        //             AbstractEvent.this.publish();
+        //         }
+        //     }
+        // );
     }
 
     public String getEventType() {

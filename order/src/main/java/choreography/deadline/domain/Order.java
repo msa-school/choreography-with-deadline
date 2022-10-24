@@ -22,9 +22,13 @@ public class Order {
     private String holderId;
 
     
+    @PrePersist
+    public void setStatus(){
+        setStatus("PENDING"); //FOCUS
+    }
+    
     @PostPersist
     public void onPostPersist() {
-        setStatus("PENDING"); //FOCUS
 
         OrderCreated orderCreated = new OrderCreated(this);
         orderCreated.publishAfterCommit();
@@ -79,7 +83,7 @@ public class Order {
     }
 
     public static void approve(PointUsed pointUsed) {
-        repository().findById(pointUsed.getId()).ifPresent(order->{
+        repository().findById(pointUsed.getOrderId()).ifPresent(order->{
             
             order.setStatus("APPROVED");
             repository().save(order);

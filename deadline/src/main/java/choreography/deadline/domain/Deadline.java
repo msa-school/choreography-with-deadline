@@ -14,6 +14,7 @@ import lombok.Data;
 @Table(name = "Deadline_table")
 @Data
 public class Deadline {
+    static final int deadlineDurationInMS = 5 * 1000;  //FOCUS: 데드라인 5초
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +38,12 @@ public class Deadline {
         deadline.setOrderId(orderCreated.getId());
         deadline.setStartedTime(new Date(orderCreated.getTimestamp()));
 
+
         //시행 당시의 deadline 이 기준이냐, 코드 적용 후 deadline 이 기준이냐 따라, 이때 deadline 을 저장할 수도 있고, 아닐 수도 있다.
+        
+        Date deadlineDate = new Date(deadline.getStartedTime().getTime() + deadlineDurationInMS);
+        deadline.setDeadline(deadlineDate);
+
         
         repository().save(deadline);
 
@@ -50,16 +56,23 @@ public class Deadline {
 
     }
 
-    static final int deadlineDurationInMS = 60 * 1000;
+    public static void delete(OrderRejected orderRejected) {
+        repository().findByOrderId(orderRejected.getId()).ifPresent(deadline ->{
+            repository().delete(deadline);
+        });
+
+    }
+
 
     public static void sendDeadlineEvents(){
 
         repository().findAll().forEach(deadline ->{
             Date now = new Date();
-            Date deadlineDate = new Date(deadline.getStartedTime().getTime() + deadlineDurationInMS);
-
-            if(now.after(deadlineDate)){
+            
+            if(now.after(deadline.getDeadline())){
+                repository().delete(deadline); //FOCUS: 한번 보내면 deadline 없애야 
                 new DeadlineReached(deadline).publishAfterCommit();
+
             }
         });
 

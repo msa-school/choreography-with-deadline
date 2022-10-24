@@ -28,7 +28,7 @@ public class Point {
 
     public static void usePoint(ExchangeSucceed exchangeSucceed) {
 
-        //FOCUS: 멱등성 관리. 한번 처리된 적이 있다면 스킵. handle idempotent:  if processed ever, skip the process:
+        //FOCUS: 멱등성 관리. 한번 처리된 적이 있다면 스킵. handle idempotent:   once processed, skip the process:
         if(Transaction.repository().findById(exchangeSucceed.getOrderId()).isPresent())
             return;
         
