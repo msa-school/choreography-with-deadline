@@ -42,6 +42,7 @@ public class Exchange {
     public static void exchange(OrderCreated orderCreated) {
 
 
+        //FOCUS: 임의로 처리 속도를 느리게 만든 구간 -- (1) 이 구간은 OrderPlaced 이벤트의 expiration 체크 전이다.
         if("100".equals(orderCreated.getCurrencyId()))
         try{
             Thread.sleep(10000);
@@ -56,8 +57,19 @@ public class Exchange {
         // 두가지가 있을거 같고 주로 (1)을 택할거 같다.
 
         Date now = new Date();
-        if(orderCreated.getTimestamp() + 5000 < now.getTime()) return;  // FOCUS: skip the old OrderCreated events
+        if(orderCreated.getTimestamp() + 5000 < now.getTime()) return;  // FOCUS: skip the expired OrderCreated events
+
         
+
+        //FOCUS: 임의로 처리 속도를 느리게 만든 구간 -- (2) 이 구간은 OrderPlaced 이벤트의 expiration 체크 후이다. DIRTY READ 가 발생할 수 있는지 체크한다.
+        ////  이 구간에서 지연이 발생하면 OrderPlaced expiration 이 되지 않은 상태로 ExchangeSucceeded 가 퍼블리시 된다. 
+        ////  물론, 잇따라 오는 OrderRejected 이벤트에 의해 삭제될 예정이다. 하지만, 그 사이 point 는 어떻게 되는가?
+        if("200".equals(orderCreated.getCurrencyId()))
+        try{
+            Thread.sleep(10000);
+        }catch(Exception e){}
+
+
         Exchange exchange = new Exchange();
 
         //FOCUS: anti-corruption
