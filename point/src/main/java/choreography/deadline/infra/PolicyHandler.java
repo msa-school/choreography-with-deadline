@@ -2,10 +2,6 @@ package choreography.deadline.infra;
 
 import choreography.deadline.config.kafka.KafkaProcessor;
 import choreography.deadline.domain.*;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.naming.NameParser;
-import javax.naming.NameParser;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -33,11 +29,10 @@ public class PolicyHandler {
         System.out.println(
             "\n\n##### listener UsePoint : " + exchangeSucceed + "\n\n"
         );
-
-        // Sample Logic //
         Point.usePoint(event);
     }
 
+    //QUIZ1: comment here for quiz 1
     @StreamListener(
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='OrderRejected'"
@@ -53,4 +48,17 @@ public class PolicyHandler {
         // Sample Logic //
         Point.compensate(event);
     }
+
+
+    //QUIZ1: uncomment here for quiz 1
+    // @StreamListener(
+    //     value = KafkaProcessor.INPUT,
+    //     condition = "headers['type']=='ExchangeCompensated'"
+    // )
+    // public void wheneverExchangeCompensated_Compensate(
+    //     @Payload ExchangeCompensated exchangeCompensated
+    // ) {
+    //     Point.compensate(exchangeCompensated);
+    // }
+
 }

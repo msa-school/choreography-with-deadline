@@ -6,21 +6,12 @@ import java.util.*;
 import lombok.*;
 
 @Data
-@ToString
-public class ExchangeSucceed extends AbstractEvent {
+public class ExchangeCompensated extends AbstractEvent {
 
     private Long id;
     private Long productId;
     private Long stock;
     private Long orderId;
-    private String userId;
     private Double point;
 
-    public ExchangeSucceed(Exchange aggregate) {
-        super(aggregate);
-    }
-
-    public ExchangeSucceed() {
-        super();
-    }
 }

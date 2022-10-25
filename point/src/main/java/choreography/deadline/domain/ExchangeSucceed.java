@@ -14,5 +14,5 @@ public class ExchangeSucceed extends AbstractEvent {
     private Long stock;
     private Long orderId;
     private String userId;
-    private Double pointUsed;
+    private Double point;
 }

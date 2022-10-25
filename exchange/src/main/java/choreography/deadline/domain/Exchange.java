@@ -25,7 +25,7 @@ public class Exchange {
 
     private Double rate;
 
-    private Double pointUsed;
+    private Double point;
 
 
     // @PrePersist
@@ -77,11 +77,12 @@ public class Exchange {
         exchange.setCurrencyId(Long.valueOf(orderCreated.getCurrencyId()));
         exchange.setOrderId(orderCreated.getId());
 
+
         // FOCUS: 랜덤하게 환률이 바뀌는 상황 이라면...
         //exchange.setRate(1.5 * (1 + Math.random()));
         exchange.setRate(1.0); //편의상 point:currency = 1:1 환률
 
-        exchange.setPointUsed(exchange.getAmount() * exchange.getRate());
+        exchange.setPoint(exchange.getAmount() * exchange.getRate());
 
         repository().save(exchange);
 
@@ -106,9 +107,10 @@ public class Exchange {
     public static void compensate(OrderRejected orderRejected) {
         
         repository().findByOrderId(orderRejected.getId()).ifPresent/*OrElse*/(exchange->{
+
+            new ExchangeCompensated(exchange).publishAfterCommit();  //FOCUS: delete 이전에 복제해야만 exchange 내에 데이터가 존재한다.
             
             repository().delete(exchange);
-
          }
           
         //, ()->{

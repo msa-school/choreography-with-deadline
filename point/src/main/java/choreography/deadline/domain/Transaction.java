@@ -11,7 +11,7 @@ import lombok.Data;
 public class Transaction {
     @Id
     Long orderId;
-
+    String userId;
     Double pointUsed;
 
     public static TransactionRepository repository(){

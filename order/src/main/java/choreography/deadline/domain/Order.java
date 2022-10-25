@@ -84,6 +84,9 @@ public class Order {
 
     public static void approve(PointUsed pointUsed) {
         repository().findById(pointUsed.getOrderId()).ifPresent(order->{
+
+            //QUIZ1: uncomment here for quiz 1
+            //if(order.getStatus().startsWith("REJECTED")) return;
             
             order.setStatus("APPROVED");
             repository().save(order);

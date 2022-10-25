@@ -34,15 +34,16 @@ public class Point {
         
         repository().findById(exchangeSucceed.getUserId()).ifPresent(point->{
 
-            if(point.getPoint() > exchangeSucceed.getPointUsed()){
+            if(point.getPoint() > exchangeSucceed.getPoint()){
 
-                point.setPoint(point.getPoint() - exchangeSucceed.getPointUsed()); 
+                point.setPoint(point.getPoint() - exchangeSucceed.getPoint()); 
                 repository().save(point);
 
                 // 멱등성 처리를 위하여 한번 포인트 사용한 주문에 대해서는 처리되었음을 동일 트랜잭션 범위 내에서 플래그 처리함.
                 Transaction transaction = new Transaction();
                 transaction.setOrderId(exchangeSucceed.getOrderId());
-                transaction.setPointUsed(exchangeSucceed.getPointUsed());
+                transaction.setPointUsed(exchangeSucceed.getPoint());
+                transaction.setUserId(exchangeSucceed.getUserId());
                 Transaction.repository().save(transaction);
 
                 PointUsed pointUsed = new PointUsed(point);
@@ -68,6 +69,8 @@ public class Point {
                 repository().save(point);
 
                 Transaction.repository().delete(tx);  //FOCUS: 멱등성을 관리하기 위하여 두번 보상 처리되는 것을 막기 위해 트랜잭션 이력을 삭제함 (플래그로 처리해도 되긴 함).  handle idempotent. delete to prevent to process twice
+
+                new PointUseCompensated(point).publish();
     
              });
 
@@ -78,5 +81,28 @@ public class Point {
         
         );
 
+    }
+
+    public static void compensate(ExchangeCompensated exchangeCompensated) {
+
+        Transaction.repository().findById(exchangeCompensated.getOrderId()).ifPresent/*OrElse*/(tx ->{
+
+            repository().findById(tx.getUserId()).ifPresent(point->{
+    
+                point.setPoint(point.getPoint() + tx.getPointUsed()); 
+                repository().save(point);
+
+                Transaction.repository().delete(tx);  //FOCUS: 멱등성을 관리하기 위하여 두번 보상 처리되는 것을 막기 위해 트랜잭션 이력을 삭제함 (플래그로 처리해도 되긴 함).  handle idempotent. delete to prevent to process twice
+
+                new PointUseCompensated(point).publish();
+    
+             });
+
+        }
+        // ,()->{
+        //     throw new RuntimteException("Compensation failed due to point")
+        // }
+        
+        );
     }
 }
