@@ -7,6 +7,7 @@
 - 동시성 처리: 처리 중에 deadline 이 벌어지면 하나만 저장되거나 하나만 compensate 되는 경우 발생한다. 
  
 - 배경설명영상:  https://youtu.be/s4jsb8MWhfM
+- 모델:  https://labs.msaez.io/#/storming/1Sp47SFydEZ2tG4NwNBGPXL8AWD2/ae2dc4459aeff0f3e9b11bf57219debe
 
 # Install
 ```
