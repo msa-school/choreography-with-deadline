@@ -15,18 +15,18 @@ kafka-console-consumer --bootstrap-server localhost:9092 --topic choreography.de
 ```
 
 # Run each microservice
-
+각 폴더에서 mvn spring-boot:run
 
 # Test
 
-- init
+## init
 ```
 http :8088/points userId="jjy" point=10000
 http :8088/points/jjy   # 포인트 확인 => 10000
 
 ```
 
-- happy path
+## happy path
 ```
 http :8088/orders holderId="jjy" currencyId=1 amount=500 
 http :8088/deadlines  # deadline 이 생성됨. 
@@ -46,7 +46,7 @@ http :8088/orders/1   # APPROVED
 ```
 
 
-- compensation with point limit:
+## compensation with point limit:
 ```
 
 http :8088/orders holderId="jjy" currencyId=1 amount=50000   # 가진 포인트보다 많은 환전 시도 --> 취소처리되어야
@@ -63,7 +63,7 @@ http :8088/points/jjy   # 포인트가 그대로 9500
 {"eventType":"ExchangeCompensated","timestamp":1666666433529,"id":null,"productId":null,"stock":null,"orderId":8,"userId":null,"point":50000.0}
 ```
 
-- compensation with downtime:
+## compensation with downtime:
 stop exchange service and test:
 ```
 ctrl+c
@@ -96,7 +96,7 @@ http :8088/points/jjy   # 포인트가 그대로 9500
 # expired events are ignored
 ```
 
-- deadline handling with ignoring expired events:
+## deadline handling with ignoring expired events:
 ```
 http :8088/orders holderId="jjy" currencyId=100 amount=500   # currencyId 를 100으로 주면 구간 1에 대하여 10 초 delay 하게 해놨음.
 
@@ -123,7 +123,7 @@ http :8088/points/jjy   # 포인트가 그대로 9500
 ## 문제
 
 
-- deadline handling with compensation:
+### deadline handling with compensation:
  currencyId 를 200으로 주면 expired event 를 걸러내는 이후의 아주 짧은 순간이지만 여기에 delay 를 주입하여 미쳐확인하지 못한 expired event (처리중에 expired 된) 가 스며들 게 하였다. 이는 deadline 이 넘어선 OrderCreated 를 결국 처리한 꼴이 되며, 어쩔 수 없이 compensation 처리가 필요한 상황이 된다.
 
 ```
