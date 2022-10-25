@@ -4,7 +4,7 @@
 - 하나라도 실패하면 reject -> compensation
 - Deadline handling: deadline 넘어도 reject. 10초 넘으면 reject
 - Idempotent handling:  compensation 이 한번 이상 벌어져도 point 가 두번 세번 환불되어서는 안된다
-- 동시성 처리: 처리 중에 deadline 이 벌어지면 하나만 저장되거나 하나만 compensate 되는 경우 발생한다. 
+- 동시성 처리와 Event Expiration: 처리 중에 deadline 이 벌어지면 하나만 저장되거나 하나만 compensate 되는 경우를 막아야 한다. 
  
  ## Links
 - 배경설명영상:  https://youtu.be/s4jsb8MWhfM
