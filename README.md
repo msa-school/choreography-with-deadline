@@ -1,3 +1,13 @@
+# Background
+
+- 3개의 마이크로서비스에 대한 eventual consistency
+- 하나라도 실패하면 reject -> compensation
+- Deadline handling: deadline 넘어도 reject. 10초 넘으면 reject
+- Idempotent handling:  compensation 이 한번 이상 벌어져도 point 가 두번 세번 환불되어서는 안된다
+- 동시성 처리: 처리 중에 deadline 이 벌어지면 하나만 저장되거나 하나만 compensate 되는 경우 발생한다. 
+ 
+- 배경설명영상:  https://youtu.be/s4jsb8MWhfM
+
 # Install
 ```
 pip install httpie
@@ -47,9 +57,10 @@ http :8088/orders/1   # APPROVED
 
 
 ## compensation with point limit:
+ 가진 포인트보다 많은 환전 시도 --> 취소처리되어야
 ```
 
-http :8088/orders holderId="jjy" currencyId=1 amount=50000   # 가진 포인트보다 많은 환전 시도 --> 취소처리되어야
+http :8088/orders holderId="jjy" currencyId=1 amount=50000   
 http :8088/orders/2   # REJECTED DUE TO POINT LIMIT 
 http :8088/points/jjy   # 포인트가 그대로 9500
 
@@ -97,8 +108,9 @@ http :8088/points/jjy   # 포인트가 그대로 9500
 ```
 
 ## deadline handling with ignoring expired events:
+currencyId 를 100으로 주면 구간 1에 대하여 10 초 delay 하게 해놨음. 
 ```
-http :8088/orders holderId="jjy" currencyId=100 amount=500   # currencyId 를 100으로 주면 구간 1에 대하여 10 초 delay 하게 해놨음.
+http :8088/orders holderId="jjy" currencyId=100 amount=500   
 
 # wait 5 seconds
 http :8088/orders   # REJECTED DUE TO DEADLINE 
