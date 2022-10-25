@@ -31,12 +31,16 @@ http :8088/orders/1   # APPROVED
 
 http :8088/orders holderId="jjy" currencyId=1 amount=50000   # 가진 포인트보다 많은 환전 시도 --> 취소처리되어야
 http :8088/orders/2   # REJECTED DUE TO POINT LIMIT 
+http :8088/points/jjy   # 포인트가 그대로 9500
+
 ```
 
 - 
 ```
-http :8088/orders holderId="jjy" currencyId=1 amount=500 delaySeconds=6   # deadline 을 초과하는 거래 시도 ---> 취소처리되어야
+http :8088/orders holderId="jjy" currencyId=100 amount=500   # currencyId 를 100으로 주면 10 초 delay 하게 해놨음.
 http :8088/orders   # REJECTED DUE TO DEADLINE 
+http :8088/points/jjy   # 포인트가 그대로 9500
+
 ```
 
 

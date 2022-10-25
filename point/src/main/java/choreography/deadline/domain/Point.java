@@ -60,7 +60,7 @@ public class Point {
 
     public static void compensate(OrderRejected orderRejected) {
         
-        Transaction.repository().findById(orderRejected.getId()).ifPresent(tx ->{
+        Transaction.repository().findById(orderRejected.getId()).ifPresent/*OrElse*/(tx ->{
 
             repository().findById(orderRejected.getHolderId()).ifPresent(point->{
     
@@ -71,7 +71,12 @@ public class Point {
     
              });
 
-        });
+        }
+        // ,()->{
+        //     throw new RuntimteException("Compensation failed due to point")
+        // }
+        
+        );
 
     }
 }

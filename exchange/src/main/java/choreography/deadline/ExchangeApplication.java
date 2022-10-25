@@ -1,6 +1,8 @@
 package choreography.deadline;
 
 import choreography.deadline.config.kafka.KafkaProcessor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -13,6 +15,8 @@ import org.springframework.context.ApplicationContext;
 public class ExchangeApplication {
 
     public static ApplicationContext applicationContext;
+
+    public static int delaySeconds = 3;
 
     public static void main(String[] args) {
         applicationContext =

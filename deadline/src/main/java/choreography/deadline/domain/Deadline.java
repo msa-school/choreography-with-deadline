@@ -1,12 +1,8 @@
 package choreography.deadline.domain;
 
 import choreography.deadline.DeadlineApplication;
-import choreography.deadline.domain.DeadlineReached;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.*;
-
-import org.springframework.scheduling.annotation.Scheduled;
 
 import lombok.Data;
 
@@ -50,19 +46,18 @@ public class Deadline {
     }
 
     public static void delete(OrderPlaced orderPlaced) {
-        repository().findByOrderId(orderPlaced.getId()).ifPresent(deadline ->{
+        repository().findByOrderId(orderPlaced.getId()).ifPresentOrElse(deadline ->{
             repository().delete(deadline);
-        });
+        }, ()->{throw new RuntimeException("No such order id" + orderPlaced.getId());});
 
     }
 
     public static void delete(OrderRejected orderRejected) {
-        repository().findByOrderId(orderRejected.getId()).ifPresent(deadline ->{
+        repository().findByOrderId(orderRejected.getId()).ifPresentOrElse(deadline ->{
             repository().delete(deadline);
-        });
+        }, ()->{throw new RuntimeException("No such order id" + orderRejected.getId());});
 
     }
-
 
     public static void sendDeadlineEvents(){
 

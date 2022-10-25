@@ -43,6 +43,26 @@ public class PolicyHandler {
         Deadline.schedule(event);
     }
 
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='OrderPlaced'"
+    )
+    public void wheneverOrderPlaced_delete(
+        @Payload OrderPlaced orderPlaced
+    ) {
+        Deadline.delete(orderPlaced);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='OrderRejected'"
+    )
+    public void wheneverOrderRejected_delete(
+        @Payload OrderRejected orderRejected
+    ) {
+        Deadline.delete(orderRejected);
+    }
+
     @Scheduled(fixedRate = 10000) //FOCUS: every 10 seconds. 10초에 한번씩
     public void checkDeadline(){
         Deadline.sendDeadlineEvents();
