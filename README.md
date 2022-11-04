@@ -7,7 +7,7 @@
 - 동시성 처리와 Event Expiration: 처리 중에 deadline 이 벌어지면 하나만 저장되거나 하나만 compensate 되는 경우를 막아야 한다. 
  
  ## Links
-- 배경설명영상:  https://youtu.be/s4jsb8MWhfM
+- 설명영상:  https://www.youtube.com/watch?v=oKNx8zX0YXc
 - 모델:  https://labs.msaez.io/#/storming/1Sp47SFydEZ2tG4NwNBGPXL8AWD2/ae2dc4459aeff0f3e9b11bf57219debe
 - IDE:  https://gitpod.io/#github.com/uEngine-Solutions/choreography-with-deadline
 
