@@ -56,8 +56,9 @@ public class Exchange {
         // Order 쪽에서 Rejected 된게 approve 를 다시 타고 온 건에 대하여 다시 취소하게 하는 방법 --(2) 
         // 두가지가 있을거 같고 주로 (1)을 택할거 같다.
 
-        Date now = new Date();
-        if(orderCreated.getTimestamp() + 5000 < now.getTime()) return;  // FOCUS: skip the expired OrderCreated events
+        ////////// FOCUS: event expiration
+        // Date now = new Date();
+        // if(orderCreated.getTimestamp() + 5000 < now.getTime()) return;  // FOCUS: skip the expired OrderCreated events
 
         
 

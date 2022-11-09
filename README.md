@@ -28,7 +28,7 @@ kafka-console-consumer --bootstrap-server localhost:9092 --topic choreography.de
 ```
 
 # Run each microservice
-각 폴더에서 mvn spring-boot:run
+각 폴더에서 mvn clean spring-boot:run
 
 # Test
 
@@ -85,7 +85,7 @@ ctrl+c
 
 and create an order:
 ```
-http :8088/orders holderId="jjy" amount=500   
+http :8088/orders holderId="jjy" currencyId=1 amount=500   
 ```
 
 start exchange service:
