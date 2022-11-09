@@ -63,7 +63,7 @@ public class PolicyHandler {
         Deadline.delete(orderRejected);
     }
 
-    @Scheduled(fixedRate = 10000) //FOCUS: every 10 seconds. 10초에 한번씩
+    @Scheduled(fixedRate = 1000) //FOCUS: every 10 seconds. 10초에 한번씩
     public void checkDeadline(){
         Deadline.sendDeadlineEvents();
     }
